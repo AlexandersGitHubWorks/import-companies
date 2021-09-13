@@ -19,6 +19,9 @@
                 font-family: 'Nunito', sans-serif;
             }
         </style>
+
+        <!-- Js -->
+        <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     </head>
     <body class="antialiased">
         <div class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center py-4 sm:pt-0">
@@ -59,13 +62,15 @@
                 </div>
 
                 <div class="p-6 border-t border-gray-200 dark:border-gray-700 md:border-t-0 md:border-l">
-                    <p>Total count: {{ $companies->total() }}</p>
+                    @if ($companies->count())
+                        <p>Total count: {{ $companies->total() }}</p>
 
-                    @foreach($companies as $company)
-                        <p>{{ $company->orgnumber }} {{ $company->name }}</p>
-                    @endforeach
+                        @foreach($companies as $company)
+                            <p>{{ $company->orgnumber }} {{ $company->name }}</p>
+                        @endforeach
 
-                    {{ $companies->links() }}
+                        {{ $companies->links() }}
+                    @endif
                 </div>
 
                 <div class="flex justify-center mt-4 sm:items-center sm:justify-between">
@@ -95,5 +100,15 @@
                 </div>
             </div>
         </div>
+
+        @if(session()->has('message'))
+            <div x-data="{ show: true }"
+                 x-init="setTimeout(() => $el.classList.add('opacity-0'), 4000); setTimeout(() => show = false, 6000)"
+                 x-show="show"
+                 style="position: fixed; bottom: 30px; right: 30px; background-color: #4343e5; color: white; padding: 0 15px; border-radius: 5px;"
+            >
+                <p>{{ session('message') }}</p>
+            </div>
+        @endif
     </body>
 </html>

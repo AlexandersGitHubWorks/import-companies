@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Jobs\ImportFileJob;
 use App\Models\Company;
 use Illuminate\Support\Facades\File;
+use Illuminate\Bus\Batch;
+use Illuminate\Support\Facades\Bus;
 
 class ImportService
 {
@@ -14,9 +16,16 @@ class ImportService
 
         $files = $this->prepareData();
 
+        $batchJobs = [];
+
         foreach ($files as $file) {
-            ImportFileJob::dispatch($file->getFilename());
+            $batchJobs[] = new ImportFileJob($file->getFilename());
         }
+
+        Bus::batch($batchJobs)
+            ->finally(function (Batch $batch) {
+                File::deleteDirectory(storage_path("import/chunks"));
+            })->dispatch();
     }
 
     protected function prepareData()

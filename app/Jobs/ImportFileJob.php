@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Services\ImportFileService;
+use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -12,7 +13,7 @@ use Illuminate\Queue\SerializesModels;
 
 class ImportFileJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $file;
 
@@ -33,6 +34,10 @@ class ImportFileJob implements ShouldQueue
      */
     public function handle()
     {
+        if ($this->batch()->cancelled()) {
+            return;
+        }
+
         (new ImportFileService($this->file))->run();
     }
 }

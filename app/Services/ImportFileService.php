@@ -30,12 +30,5 @@ class ImportFileService
         }
 
         fclose($fh);
-
-        $this->removeTemporaryFile();
-    }
-
-    public function removeTemporaryFile()
-    {
-        File::delete(storage_path("import/chunks/{$this->filePath}"));
     }
 }

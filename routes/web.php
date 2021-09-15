@@ -16,3 +16,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/import', [HomeController::class, 'import'])->name('import');
+Route::get('/stop-import', [HomeController::class, 'stopImport'])->name('stop-import');

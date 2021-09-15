@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\ImportJob;
 use App\Models\Company;
+use Illuminate\Support\Facades\Artisan;
 
 class HomeController extends Controller
 {
@@ -24,5 +25,12 @@ class HomeController extends Controller
         ImportJob::dispatch();
 
         return redirect()->home()->with('message', 'Import is started!');
+    }
+
+    public function stopImport()
+    {
+        Artisan::call('flush:redis');
+
+        return redirect()->home()->with('message', 'Import is stopped.');
     }
 }
